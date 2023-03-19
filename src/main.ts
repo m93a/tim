@@ -1,7 +1,7 @@
 import "./styles.css";
-import App from "./App.svelte";
+import Loader from "./Loader.svelte";
 
-const app = new App({
+const app = new Loader({
   target: document.getElementById("app"),
 });
 

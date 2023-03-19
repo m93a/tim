@@ -1,8 +1,19 @@
 <script lang="ts">
-  import Greet from './lib/Greet.svelte'
+  import { getVips } from "./Context.svelte";
+  const { Image, Source } = getVips();
 
-  function onPaste(e: ClipboardEvent) {
-    console.log(e.clipboardData.items[0]);
+  const supportedTypes = new Set(["image/png", "image/jpeg"]);
+
+  async function onPaste(e: ClipboardEvent) {
+    const blob: File = [...e.clipboardData.files].filter((f) =>
+      supportedTypes.has(f.type)
+    )[0];
+    if (blob === undefined) return;
+    const buffer = await blob.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+    const source = Source.newFromMemory(bytes);
+    const img = Image.newFromSource(source);
+    console.log(img);
   }
 </script>
 
@@ -22,16 +33,6 @@
       <img src="/svelte.svg" class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
-
-  <p>
-    Click on the Tauri, Vite, and Svelte logos to learn more.
-  </p>
-
-  <div class="row">
-    <Greet />
-  </div>
-
-
 </main>
 
 <style>
